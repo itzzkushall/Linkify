@@ -1,0 +1,37 @@
+/* Toast Styles */
+.toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius-md);
+    background: var(--surface-color);
+    box-shadow: var(--shadow-lg);
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+}
+
+.toast.show {
+    transform: translateX(0);
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.toast.success {
+    background: var(--success-color);
+    color: white;
+}
+
+.toast.error {
+    background: var(--error-color);
+    color: white;
+}
+
+.toast i {
+    font-size: 1.25rem;
+}
