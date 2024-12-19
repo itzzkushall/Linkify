@@ -10,7 +10,7 @@ const CustomizePage = {
     setupColorPickers() {
         const colorInputs = document.querySelectorAll('.color-picker');
         colorInputs.forEach(input => {
-            input.addEventListener('change', () => this.handleThemeUpdate());
+            input.addEventListener('input', () => this.handleThemeUpdate()); // Changed from 'change' to 'input'
         });
     },
 
@@ -26,6 +26,10 @@ const CustomizePage = {
         layoutOptions.forEach(option => {
             option.addEventListener('click', () => this.handleLayoutChange(option.dataset.layout));
         });
+
+        // Add autosave for button style and animation
+        document.getElementById('button-style')?.addEventListener('change', () => this.handleThemeUpdate());
+        document.getElementById('animation-style')?.addEventListener('change', () => this.handleThemeUpdate());
     },
 
     loadCurrentTheme() {
@@ -52,74 +56,10 @@ const CustomizePage = {
 
         const userId = auth.currentUser.id;
         storage.setTheme(userId, theme);
-        Toast.show('Theme updated successfully!');
-    },
-
-    applyPresetTheme(preset) {
-        const presets = {
-            light: {
-                background: '#ffffff',
-                text: '#000000',
-                accent: '#0066ff',
-                fontFamily: 'Inter',
-                buttonStyle: 'rounded',
-                animation: 'fade'
-            },
-            dark: {
-                background: '#1a1a1a',
-                text: '#ffffff',
-                accent: '#00ffbb',
-                fontFamily: 'Space Grotesk',
-                buttonStyle: 'sharp',
-                animation: 'slide'
-            },
-            nature: {
-                background: '#f0f7f4',
-                text: '#2d3436',
-                accent: '#38a169',
-                fontFamily: 'Outfit',
-                buttonStyle: 'organic',
-                animation: 'bounce'
-            },
-            ocean: {
-                background: '#e3f2fd',
-                text: '#1a365d',
-                accent: '#0066cc',
-                fontFamily: 'Plus Jakarta Sans',
-                buttonStyle: 'wave',
-                animation: 'float'
-            },
-            minimal: {
-                background: '#fafafa',
-                text: '#2d3436',
-                accent: '#000000',
-                fontFamily: 'DM Sans',
-                buttonStyle: 'minimal',
-                animation: 'fade'
-            },
-            neon: {
-                background: '#0a0a0a',
-                text: '#ffffff',
-                accent: '#00ff88',
-                fontFamily: 'Syncopate',
-                buttonStyle: 'glow',
-                animation: 'pulse'
-            }
-        };
-
-        const theme = presets[preset];
-        if (theme) {
-            const userId = auth.currentUser.id;
-            storage.setTheme(userId, theme);
-            this.loadCurrentTheme();
-            Toast.show('Theme applied successfully!');
-        }
+        Toast.show('Theme updated!');
     },
 
     render() {
-        const userId = auth.currentUser.id;
-        const theme = storage.getTheme(userId);
-
         return `
             <div class="customize-container">
                 <div class="customize-header">
@@ -132,15 +72,15 @@ const CustomizePage = {
                     <div class="color-pickers">
                         <div class="form-group">
                             <label>Background Color</label>
-                            <input type="color" id="background-color" class="color-picker" value="${theme.background}">
+                            <input type="color" id="background-color" class="color-picker">
                         </div>
                         <div class="form-group">
                             <label>Text Color</label>
-                            <input type="color" id="text-color" class="color-picker" value="${theme.text}">
+                            <input type="color" id="text-color" class="color-picker">
                         </div>
                         <div class="form-group">
                             <label>Accent Color</label>
-                            <input type="color" id="accent-color" class="color-picker" value="${theme.accent}">
+                            <input type="color" id="accent-color" class="color-picker">
                         </div>
                     </div>
 
@@ -178,18 +118,6 @@ const CustomizePage = {
                         <option value="float">Float</option>
                         <option value="pulse">Pulse</option>
                     </select>
-                </div>
-
-                <div class="preset-themes card">
-                    <h3>Preset Themes</h3>
-                    <div class="theme-grid">
-                        <button class="theme-preset light" onclick="CustomizePage.applyPresetTheme('light')">Light</button>
-                        <button class="theme-preset dark" onclick="CustomizePage.applyPresetTheme('dark')">Dark</button>
-                        <button class="theme-preset nature" onclick="CustomizePage.applyPresetTheme('nature')">Nature</button>
-                        <button class="theme-preset ocean" onclick="CustomizePage.applyPresetTheme('ocean')">Ocean</button>
-                        <button class="theme-preset minimal" onclick="CustomizePage.applyPresetTheme('minimal')">Minimal</button>
-                        <button class="theme-preset neon" onclick="CustomizePage.applyPresetTheme('neon')">Neon</button>
-                    </div>
                 </div>
 
                 <div class="customize-actions">
